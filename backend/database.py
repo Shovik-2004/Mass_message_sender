@@ -1,25 +1,30 @@
-# /backend/database.py
+# backend/database.py
 from sqlalchemy import create_engine
-from sqlalchemy.ext.declarative import declarative_base
-from sqlalchemy.orm import sessionmaker
+from sqlalchemy.orm import sessionmaker, declarative_base # <-- Updated import
 from dotenv import load_dotenv
 import os
 
-from pathlib import Path
-env_path = Path(__file__).resolve().parent / ".env"
-load_dotenv(dotenv_path=env_path)
+load_dotenv()
 
-DATABASE_URL = os.getenv("DATABASE_URL")  # set this in your .env
+DATABASE_URL = os.getenv("DATABASE_URL", "sqlite:///./mass_messenger.db")
 
-print("DATABASE_URL =", DATABASE_URL)
-
-engine = create_engine(DATABASE_URL)
+engine = create_engine(
+    DATABASE_URL,
+    connect_args={"check_same_thread": False} if "sqlite" in DATABASE_URL else {}
+)
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
-Base = declarative_base()
 
+# Use the new recommended way to create the Base
+Base = declarative_base() # <-- This line is now correct
+
+# Dependency to get a DB session for each request
 def get_db():
     db = SessionLocal()
     try:
         yield db
     finally:
         db.close()
+
+# Function to create all database tables
+def init_db():
+    Base.metadata.create_all(bind=engine)
