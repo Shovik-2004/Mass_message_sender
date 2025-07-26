@@ -13,8 +13,8 @@ from backend.database import get_db
 router = APIRouter()
 
 # --- Google OAuth2 Configuration (remains the same) ---
-PROJECT_ROOT = pathlib.Path(__file__).resolve().parent.parent.parent
-CLIENT_SECRETS_FILE = os.path.join(PROJECT_ROOT, 'client_secret_1049923121871-cdhh4030763qphdqepqtgu28vjrefaod.apps.googleusercontent.com.json')
+BACKEND_DIR = pathlib.Path(__file__).resolve().parent.parent
+CLIENT_SECRETS_FILE = os.path.join(BACKEND_DIR, 'client_secret_1049923121871-cdhh4030763qphdqepqtgu28vjrefaod.apps.googleusercontent.com.json')
 GOOGLE_SCOPES = [
     "https://www.googleapis.com/auth/userinfo.email", "https://www.googleapis.com/auth/userinfo.profile",
     "https://www.googleapis.com/auth/gmail.send", "openid"
